@@ -32,8 +32,10 @@ public class Square extends isShape {
 
     @Override
     public String toString() {
-        String line = null;
-        line +="Square," + super.getPosition() +","+ super.getProperties()+","+super.getColor()+","+super.getFillColor();
+        String line ="Square," + super.getPosition().x+","+ super.getPosition().y +","+ super.getProperties().get("length")+","+super.getColor().toString()+",";
+        if (super.getFillColor()!=null)
+            line+=super.getFillColor().toString();
+        else line+="-1";
         return line;
     }
 

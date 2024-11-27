@@ -26,8 +26,6 @@ public class Line extends isShape{
     
     @Override
     public String toString() {
-        String line = null;
-        line +="Line," + super.getPosition() +","+ super.getProperties()+","+super.getColor()+","+super.getFillColor();
-        return line;
+        return "Line," + super.getPosition().x+","+ super.getPosition().y +","+ super.getProperties().get("length")+","+super.getColor().toString()+",-1";
     }
 }

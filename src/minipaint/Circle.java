@@ -32,8 +32,10 @@ public class Circle extends isShape {
     
     @Override
     public String toString() {
-        String line = null;
-        line +="Circle," + super.getPosition() +","+ super.getProperties()+","+super.getColor()+","+super.getFillColor();
+        String line= "Circle," + super.getPosition().x+","+ super.getPosition().y +","+ super.getProperties().get("radius")+","+super.getColor().toString()+",";
+        if (super.getFillColor()!=null)
+            line+=super.getFillColor().toString();
+        else line+="-1";
         return line;
     }
 

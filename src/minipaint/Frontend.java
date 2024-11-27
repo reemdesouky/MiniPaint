@@ -10,8 +10,10 @@ import java.util.*;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -542,33 +544,126 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                 return;
             }
             try {
-                file = new FileWriter(textField.getText());
+                file = new FileWriter(textField.getText() + ".txt");
             } catch (IOException ex) {
                 Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
             }
-            for (int i = 0; i < shapes.size(); i++) {
+            try {
+                for (int i = 0; i < shapes.size(); i++) {
+
+                    file.write(shapes.get(i).toString() + "\n");
+                }
+                JOptionPane.showMessageDialog(null, "Shapes saved successfully.");
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "An error occured while saving!", "Error", JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
                 try {
-                    file.write(shapes.get(i).toString());
+                    if (file != null) {
+                        file.close();
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            JOptionPane.showMessageDialog(null, "Shapes saved successfully.");
         }
-
-
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
-       /* File file = null;
+        File file;
+        Scanner scan = null;
         JTextField textField = new JTextField(20);
         JPanel panel = new JPanel();
         panel.add(new JLabel("File Name:"));
+        panel.add(textField);
         int result = JOptionPane.showConfirmDialog(null, panel,
                 "Enter file name to open", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             file = new File(textField.getText() + ".txt");
-        }*/
+            if (!file.exists()) {
+                JOptionPane.showMessageDialog(null, "File not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                scan = new Scanner(file);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            while (scan.hasNextLine()) {
+                String[] line = scan.nextLine().split(",");
+                if (line[0].equals("Circle")) {
+
+                    Circle c = new Circle();
+
+                    Point p = new Point();
+                    p.x = Integer.parseInt(line[1]);
+                    p.y = Integer.parseInt(line[2]);
+                    c.setPosition(p);
+
+                    double val = Double.parseDouble(line[3]);
+                    Map<String, Double> m = new HashMap();
+                    m.put("radius", val);
+                    c.setProperties(m);
+
+                    c.setColor(parseColor(line[4]));
+                    c.setFillColor(parseColor(line[5]));
+                    shapes.add(c);
+                }
+                if (line[0].equals("Line")) {
+                    Line l = new Line();
+                    
+                    Point p = new Point();
+                    p.x = Integer.parseInt(line[1]);
+                    p.y = Integer.parseInt(line[2]);
+                    l.setPosition(p);
+
+                    double val = Double.parseDouble(line[3]);
+                    Map<String, Double> m = new HashMap();
+                    m.put("length", val);
+                    l.setProperties(m);
+
+                    l.setColor(parseColor(line[4]));
+                    l.setFillColor(null);
+                    shapes.add(l);
+                }
+                if (line[0].equals("Square")) {
+                    Square s = new Square();
+                    
+                    Point p = new Point();
+                    p.x = Integer.parseInt(line[1]);
+                    p.y = Integer.parseInt(line[2]);
+                    s.setPosition(p);
+
+                    double val = Double.parseDouble(line[3]);
+                    Map<String, Double> m = new HashMap();
+                    m.put("length", val);
+                    s.setProperties(m);
+
+                    s.setColor(parseColor(line[4]));
+                    s.setFillColor(parseColor(line[5]));
+                    shapes.add(s);
+                }
+                if (line[0].equals("Rectangle")) {
+                    Rectangle r = new Rectangle();
+                    Point p = new Point();
+                    p.x = Integer.parseInt(line[1]);
+                    p.y = Integer.parseInt(line[2]);
+                    r.setPosition(p);
+
+                    double val1 = Double.parseDouble(line[3]);
+                    double val2 = Double.parseDouble(line[4]);
+                    Map<String, Double> m = new HashMap();
+                    m.put("height", val1);
+                    m.put("width", val2);
+                    r.setProperties(m);
+
+                    r.setColor(parseColor(line[3]));
+                    r.setFillColor(parseColor(line[4]));
+                    shapes.add(r);
+                }
+            }
+        }
     }//GEN-LAST:event_loadButtonActionPerformed
 
     /**
@@ -659,6 +754,13 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
             super.paintComponent(canvas);
             refresh(canvas);
         }
+    }
+
+    public Color parseColor(String str) {
+        int r = Integer.parseInt(str.substring(str.indexOf("r=")+2, str.indexOf(",g=")));
+        int g = Integer.parseInt(str.substring(str.indexOf("g=")+2, str.indexOf(",b=")));
+        int b = Integer.parseInt(str.substring(str.indexOf("b=")+2, str.indexOf("]")));
+        return new Color(r, g, b);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
