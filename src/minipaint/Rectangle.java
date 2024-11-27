@@ -31,5 +31,12 @@ public class Rectangle extends isShape {
             canvas.fillRect(position.x, position.y,(int) width, (int) height);
         }
     }
+    
+    @Override
+    public String toString() {
+        String line = null;
+        line +="Rectangle," + super.getPosition() +","+ super.getProperties()+","+super.getColor()+","+super.getFillColor();
+        return line;
+    }
 
 }

@@ -9,7 +9,12 @@ import java.awt.Color;
 import java.util.*;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -50,6 +55,10 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         jLabel1 = new javax.swing.JLabel();
         colorizeButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
+        resizeButton = new javax.swing.JButton();
+        moveButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
+        loadButton = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -118,7 +127,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         jCombo.setEditable(true);
         jCombo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jCombo.setForeground(new java.awt.Color(0, 0, 153));
-        jCombo.setSelectedIndex(-1);
         jCombo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,30 +153,72 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
             }
         });
 
+        resizeButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        resizeButton.setText("Resize");
+        resizeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resizeButtonActionPerformed(evt);
+            }
+        });
+
+        moveButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        moveButton.setText("Move");
+        moveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                moveButtonActionPerformed(evt);
+            }
+        });
+
+        saveButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+
+        loadButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        loadButton.setText("Load");
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(colorizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(circleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(squareButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(rectButton)))
+                        .addComponent(rectButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(colorizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(resizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(moveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(loadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
@@ -180,20 +230,27 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                     .addComponent(squareButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(circleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(colorizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(101, 101, 101)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(loadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(colorizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(resizeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(moveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(116, 116, 116))
         );
 
         pack();
@@ -204,7 +261,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         JTextField xField = new JTextField(5);
         JTextField yField = new JTextField(5);
         JTextField lineField = new JTextField(5);
-        //JTextField color = new JTextField(5);
 
         JPanel panel = new JPanel();
         panel.add(new JLabel("X:"));
@@ -213,8 +269,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         panel.add(yField);
         panel.add(new JLabel("Length:"));
         panel.add(lineField);
-        //panel.add(new JLabel("Outline color:"));
-        //panel.add(color);
 
         try {
             int result = JOptionPane.showConfirmDialog(null, panel,
@@ -226,6 +280,12 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                     return;
                 }
 
+                if (Double.parseDouble(xField.getText()) <= 0
+                        || Double.parseDouble(yField.getText()) <= 0
+                        || Double.parseDouble(lineField.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(null, "Numbers can not be zero or less!", "Message", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (Double.parseDouble(xField.getText()) > 400
                         || Double.parseDouble(yField.getText()) > 500
                         || Double.parseDouble(lineField.getText()) > 200) {
@@ -257,7 +317,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         JTextField xField = new JTextField(5);
         JTextField yField = new JTextField(5);
         JTextField sidelengthField = new JTextField(5);
-        //JTextField color = new JTextField(5);
 
         JPanel panel = new JPanel();
         panel.add(new JLabel("X:"));
@@ -266,8 +325,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         panel.add(yField);
         panel.add(new JLabel("Side Length:"));
         panel.add(sidelengthField);
-        //panel.add(new JLabel("Outline color:"));
-        //panel.add(color);
 
         try {
             int result = JOptionPane.showConfirmDialog(null, panel,
@@ -279,6 +336,12 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                     return;
                 }
 
+                if (Double.parseDouble(xField.getText()) <= 0
+                        || Double.parseDouble(yField.getText()) <= 0
+                        || Double.parseDouble(sidelengthField.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(null, "Numbers can not be zero or less!", "Message", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (Double.parseDouble(xField.getText()) > 400
                         || Double.parseDouble(yField.getText()) > 500
                         || Double.parseDouble(sidelengthField.getText()) > 200) {
@@ -322,7 +385,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         JTextField xField = new JTextField(5);
         JTextField yField = new JTextField(5);
         JTextField radiusField = new JTextField(5);
-        //JTextField color = new JTextField(5);
 
         JPanel panel = new JPanel();
         panel.add(new JLabel("X:"));
@@ -331,8 +393,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         panel.add(yField);
         panel.add(new JLabel("Radius:"));
         panel.add(radiusField);
-        //panel.add(new JLabel("Outline color:"));
-        //panel.add(color);
 
         try {
             int result = JOptionPane.showConfirmDialog(null, panel,
@@ -343,7 +403,12 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                     JOptionPane.showMessageDialog(null, "Please enter values for X, Y, and radius.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
+                if (Double.parseDouble(xField.getText()) <= 0
+                        || Double.parseDouble(yField.getText()) <= 0
+                        || Double.parseDouble(radiusField.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(null, "Numbers can't equal zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (Double.parseDouble(xField.getText()) > 400
                         || Double.parseDouble(yField.getText()) > 500
                         || Double.parseDouble(radiusField.getText()) > 200) {
@@ -391,8 +456,6 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         panel.add(heightField);
         panel.add(new JLabel("Width:"));
         panel.add(widthField);
-        //panel.add(new JLabel("Outline color:"));
-        //panel.add(color);
 
         try {
             int result = JOptionPane.showConfirmDialog(null, panel,
@@ -404,6 +467,12 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                     return;
                 }
 
+                if (Double.parseDouble(xField.getText()) <= 0
+                        || Double.parseDouble(yField.getText()) <= 0
+                        || Double.parseDouble(heightField.getText()) <= 0 || Double.parseDouble(widthField.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(null, "Numbers can't be zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (Double.parseDouble(xField.getText()) > 400
                         || Double.parseDouble(yField.getText()) > 500
                         || Double.parseDouble(heightField.getText()) > 200 || Double.parseDouble(widthField.getText()) > 200) {
@@ -446,6 +515,61 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
             JOptionPane.showMessageDialog(null, "Please select a shape to colorize.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_colorizeButtonActionPerformed
+
+    private void resizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resizeButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_resizeButtonActionPerformed
+
+    private void moveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_moveButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if (shapes.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Please draw shapes to save", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        FileWriter file = null;
+        JTextField textField = new JTextField(20);
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("File Name:"));
+        panel.add(textField);
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Enter Saving Info.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            if (textField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter fileName.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                file = new FileWriter(textField.getText());
+            } catch (IOException ex) {
+                Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int i = 0; i < shapes.size(); i++) {
+                try {
+                    file.write(shapes.get(i).toString());
+                } catch (IOException ex) {
+                    Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Shapes saved successfully.");
+        }
+
+
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
+       /* File file = null;
+        JTextField textField = new JTextField(20);
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("File Name:"));
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Enter file name to open", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            file = new File(textField.getText() + ".txt");
+        }*/
+    }//GEN-LAST:event_loadButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -546,7 +670,11 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton lineButton;
+    private javax.swing.JButton loadButton;
+    private javax.swing.JButton moveButton;
     private javax.swing.JButton rectButton;
+    private javax.swing.JButton resizeButton;
+    private javax.swing.JButton saveButton;
     private javax.swing.JButton squareButton;
     // End of variables declaration//GEN-END:variables
     private ArrayList<Shape> shapes = new ArrayList<>();

@@ -19,5 +19,7 @@ public interface Shape {
     public Color getFillColor();
     public void draw(java.awt.Graphics canvas);
     public void colorize(Graphics canvas);
+    @Override
+    public String toString();
 }
 

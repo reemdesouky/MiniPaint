@@ -57,6 +57,9 @@ abstract public class isShape implements Shape {
     }
 
     @Override
+    abstract public String toString();
+    
+    @Override
     abstract public void draw(Graphics canvas);
 
     @Override

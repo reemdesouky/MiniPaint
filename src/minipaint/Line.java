@@ -23,4 +23,11 @@ public class Line extends isShape{
     public void colorize(Graphics canvas) {
 
     }
+    
+    @Override
+    public String toString() {
+        String line = null;
+        line +="Line," + super.getPosition() +","+ super.getProperties()+","+super.getColor()+","+super.getFillColor();
+        return line;
+    }
 }

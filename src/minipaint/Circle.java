@@ -29,5 +29,12 @@ public class Circle extends isShape {
             canvas.fillOval(position.x, position.y, (int) radius * 2, (int) radius * 2);
         }
     }
+    
+    @Override
+    public String toString() {
+        String line = null;
+        line +="Circle," + super.getPosition() +","+ super.getProperties()+","+super.getColor()+","+super.getFillColor();
+        return line;
+    }
 
 }
