@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -519,7 +520,14 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
     }//GEN-LAST:event_colorizeButtonActionPerformed
 
     private void resizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resizeButtonActionPerformed
-        // TODO add your handling code here:
+        int selectedIndex = jCombo.getSelectedIndex();
+        if (selectedIndex != -1) {
+            Shape selectedShape = shapes.get(selectedIndex);
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a shape to resize.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_resizeButtonActionPerformed
 
     private void moveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveButtonActionPerformed
@@ -532,19 +540,22 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
             return;
         }
         FileWriter file = null;
-        JTextField textField = new JTextField(20);
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("File Name:"));
-        panel.add(textField);
-        int result = JOptionPane.showConfirmDialog(null, panel,
-                "Enter Saving Info.", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            if (textField.getText().isEmpty()) {
+        JFileChooser filename = new JFileChooser();
+        filename.setDialogTitle("Save Shapes");
+
+        int result = filename.showSaveDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            if (filename.getSelectedFile().getName().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please enter fileName.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if (!filename.getSelectedFile().getName().endsWith(".txt")) {
+                JOptionPane.showMessageDialog(null, "Please enter fileName ends with .txt extension", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             try {
-                file = new FileWriter(textField.getText() + ".txt");
+                file = new FileWriter(filename.getSelectedFile().getName());
             } catch (IOException ex) {
                 Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -573,14 +584,17 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
     private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
         File file;
         Scanner scan = null;
-        JTextField textField = new JTextField(20);
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("File Name:"));
-        panel.add(textField);
-        int result = JOptionPane.showConfirmDialog(null, panel,
-                "Enter file name to open", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            file = new File(textField.getText() + ".txt");
+        JFileChooser filename = new JFileChooser();
+        filename.setDialogTitle("Save Shapes");
+
+        int result = filename.showSaveDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            if (!filename.getSelectedFile().getName().endsWith(".txt")) {
+                JOptionPane.showMessageDialog(null, "File invalid!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            file = new File(filename.getSelectedFile().getName());
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(null, "File not found!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -590,49 +604,63 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Frontend.class.getName()).log(Level.SEVERE, null, ex);
             }
+            if (!scan.hasNextLine()) {
+                JOptionPane.showMessageDialog(null, "File is empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             while (scan.hasNextLine()) {
                 String[] line = scan.nextLine().split(",");
-                if (line[0].equals("Circle")) {
+                if (line[0].trim().equals("Circle")) {
 
                     Circle c = new Circle();
 
                     Point p = new Point();
-                    p.x = Integer.parseInt(line[1]);
-                    p.y = Integer.parseInt(line[2]);
+                    p.x = Integer.parseInt(line[1].trim());
+                    p.y = Integer.parseInt(line[2].trim());
                     c.setPosition(p);
 
-                    double val = Double.parseDouble(line[3]);
+                    double val = Double.parseDouble(line[3].trim());
                     Map<String, Double> m = new HashMap();
                     m.put("radius", val);
                     c.setProperties(m);
 
-                    c.setColor(parseColor(line[4]));
-                    c.setFillColor(parseColor(line[5]));
+                    c.setColor(parseColor(line[4], line[5], line[6]));
+                    if (Integer.parseInt(line[7].trim()) != -1) {
+                        c.setFillColor(parseColor(line[7], line[8], line[9]));
+                    } else {
+                        c.setFillColor(null);
+                    }
                     shapes.add(c);
+                    jPanel1.repaint();
+                    jCombo.addItem("Circle" + i);
+                    i++;
                 }
-                if (line[0].equals("Line")) {
+                if (line[0].trim().equals("Line")) {
                     Line l = new Line();
-                    
+
                     Point p = new Point();
-                    p.x = Integer.parseInt(line[1]);
-                    p.y = Integer.parseInt(line[2]);
+                    p.x = Integer.parseInt(line[1].trim());
+                    p.y = Integer.parseInt(line[2].trim());
                     l.setPosition(p);
 
-                    double val = Double.parseDouble(line[3]);
+                    double val = Double.parseDouble(line[3].trim());
                     Map<String, Double> m = new HashMap();
                     m.put("length", val);
                     l.setProperties(m);
 
-                    l.setColor(parseColor(line[4]));
+                    l.setColor(parseColor(line[4], line[5], line[6]));
                     l.setFillColor(null);
                     shapes.add(l);
+                    jPanel1.repaint();
+                    jCombo.addItem("Line" + i);
+                    i++;
                 }
                 if (line[0].equals("Square")) {
                     Square s = new Square();
-                    
+
                     Point p = new Point();
-                    p.x = Integer.parseInt(line[1]);
-                    p.y = Integer.parseInt(line[2]);
+                    p.x = Integer.parseInt(line[1].trim());
+                    p.y = Integer.parseInt(line[2].trim());
                     s.setPosition(p);
 
                     double val = Double.parseDouble(line[3]);
@@ -640,27 +668,41 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
                     m.put("length", val);
                     s.setProperties(m);
 
-                    s.setColor(parseColor(line[4]));
-                    s.setFillColor(parseColor(line[5]));
+                    s.setColor(parseColor(line[4], line[5], line[6]));
+                    if (Integer.parseInt(line[7].trim()) != -1) {
+                        s.setFillColor(parseColor(line[7], line[8], line[9]));
+                    } else {
+                        s.setFillColor(null);
+                    }
                     shapes.add(s);
+                    jPanel1.repaint();
+                    jCombo.addItem("Square" + i);
+                    i++;
                 }
                 if (line[0].equals("Rectangle")) {
                     Rectangle r = new Rectangle();
                     Point p = new Point();
-                    p.x = Integer.parseInt(line[1]);
-                    p.y = Integer.parseInt(line[2]);
+                    p.x = Integer.parseInt(line[1].trim());
+                    p.y = Integer.parseInt(line[2].trim());
                     r.setPosition(p);
 
-                    double val1 = Double.parseDouble(line[3]);
-                    double val2 = Double.parseDouble(line[4]);
+                    double val1 = Double.parseDouble(line[3].trim());
+                    double val2 = Double.parseDouble(line[4].trim());
                     Map<String, Double> m = new HashMap();
                     m.put("height", val1);
                     m.put("width", val2);
                     r.setProperties(m);
 
-                    r.setColor(parseColor(line[3]));
-                    r.setFillColor(parseColor(line[4]));
+                    r.setColor(parseColor(line[5], line[6], line[7]));
+                    if (Integer.parseInt(line[8].trim()) != -1) {
+                        r.setFillColor(parseColor(line[8], line[9], line[10]));
+                    } else {
+                        r.setFillColor(null);
+                    }
                     shapes.add(r);
+                    jPanel1.repaint();
+                    jCombo.addItem("Rectangle" + i);
+                    i++;
                 }
             }
         }
@@ -756,11 +798,11 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         }
     }
 
-    public Color parseColor(String str) {
-        int r = Integer.parseInt(str.substring(str.indexOf("r=")+2, str.indexOf(",g=")));
-        int g = Integer.parseInt(str.substring(str.indexOf("g=")+2, str.indexOf(",b=")));
-        int b = Integer.parseInt(str.substring(str.indexOf("b=")+2, str.indexOf("]")));
-        return new Color(r, g, b);
+    public Color parseColor(String r, String g, String b) {
+        int R = Integer.parseInt(r.trim());
+        int G = Integer.parseInt(g.trim());
+        int B = Integer.parseInt(b.trim());
+        return new Color(R, G, B);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

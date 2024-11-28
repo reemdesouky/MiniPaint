@@ -1,1 +1,0 @@
-Square,150,150,150.0,java.awt.Color[r=102,g=0,b=102],java.awt.Color[r=102,g=0,b=102]

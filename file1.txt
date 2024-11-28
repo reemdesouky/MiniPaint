@@ -1,2 +1,0 @@
-Square,java.awt.Point[x=150,y=150],{length=150.0},java.awt.Color[r=102,g=102,b=0],java.awt.Color[r=102,g=204,b=0]
-Circle,java.awt.Point[x=150,y=150],{radius=102.0},java.awt.Color[r=204,g=0,b=0],java.awt.Color[r=255,g=255,b=0]

@@ -34,9 +34,9 @@ public class Rectangle extends isShape {
     
     @Override
     public String toString() {
-        String line= "Rectangle,"+ super.getPosition().x+","+ super.getPosition().y +","+ super.getProperties().get("height")+","+super.getProperties().get("width")+","+super.getColor().toString()+",";
+        String line= "Rectangle,"+ super.getPosition().x+","+ super.getPosition().y +","+ super.getProperties().get("height")+","+super.getProperties().get("width")+","+super.getColor().getRed()+","+getColor().getBlue()+","+getColor().getGreen()+",";
         if (super.getFillColor()!=null)
-            line+=super.getFillColor().toString();
+            line+=super.getFillColor().getRed()+","+super.getFillColor().getGreen()+","+super.getFillColor().getBlue();
         else line+="-1";
         return line;
     }
