@@ -331,7 +331,7 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
 
         try {
             int result = JOptionPane.showConfirmDialog(null, panel,
-                    "Enter Line Properties", JOptionPane.OK_CANCEL_OPTION);
+                    "Enter square Properties", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
 
                 if (xField.getText().isEmpty() || yField.getText().isEmpty() || sidelengthField.getText().isEmpty()) {
@@ -462,11 +462,11 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
 
         try {
             int result = JOptionPane.showConfirmDialog(null, panel,
-                    "Enter Circle Properties", JOptionPane.OK_CANCEL_OPTION);
+                    "Enter rectangle Properties", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
 
                 if (xField.getText().isEmpty() || yField.getText().isEmpty() || heightField.getText().isEmpty() || widthField.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter values for X, Y, and radius.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Please enter values for X, Y, height, and width.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -523,7 +523,123 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
         int selectedIndex = jCombo.getSelectedIndex();
         if (selectedIndex != -1) {
             Shape selectedShape = shapes.get(selectedIndex);
-            
+
+            if ((selectedShape.toString().split(",")[0]).equals("Circle")) {
+                JTextField radius = new JTextField(5);
+
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("New Radius:"));
+                panel.add(radius);
+
+                try {
+                    int result = JOptionPane.showConfirmDialog(null, panel,
+                            "Enter circle's new Properties", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        if (Double.parseDouble(radius.getText()) <= 0) {
+                            JOptionPane.showMessageDialog(null, "Numbers can't be zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        if (Double.parseDouble(radius.getText()) > 500) {
+                            JOptionPane.showMessageDialog(null, "Numbers are too big", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        Map<String, Double> m = new HashMap<>();
+                        m.put("radius", Double.parseDouble(radius.getText()));
+                        selectedShape.setProperties(m);
+                        jPanel1.repaint();
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter proper Numbers", "Message", JOptionPane.ERROR_MESSAGE);
+                }
+
+            }
+            if (selectedShape.toString().split(",")[0].equals("Line")) {
+                JTextField length = new JTextField(5);
+
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("New Length:"));
+                panel.add(length);
+                try {
+                    int result = JOptionPane.showConfirmDialog(null, panel,
+                            "Enter line's new Properties", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        if (Double.parseDouble(length.getText()) <= 0) {
+                            JOptionPane.showMessageDialog(null, "Numbers can't be zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        if (Double.parseDouble(length.getText()) > 500) {
+                            JOptionPane.showMessageDialog(null, "Numbers are too big", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        Map<String, Double> m = new HashMap<>();
+                        m.put("length", Double.parseDouble(length.getText()));
+                        selectedShape.setProperties(m);
+                        jPanel1.repaint();
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter proper Numbers", "Message", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if (selectedShape.toString().split(",")[0].equals("Square")) {
+                JTextField length = new JTextField(5);
+
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("New Length:"));
+                panel.add(length);
+
+                try {
+                    int result = JOptionPane.showConfirmDialog(null, panel,
+                            "Enter square's new Properties", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        if (Double.parseDouble(length.getText()) <= 0) {
+                            JOptionPane.showMessageDialog(null, "Numbers can't be zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        if (Double.parseDouble(length.getText()) > 500) {
+                            JOptionPane.showMessageDialog(null, "Numbers are too big", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        Map<String, Double> m = new HashMap<>();
+                        m.put("length", Double.parseDouble(length.getText()));
+                        selectedShape.setProperties(m);
+                        jPanel1.repaint();
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter proper Numbers", "Message", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if (selectedShape.toString().split(",")[0].equals("Rectangle")) {
+                JTextField height = new JTextField(5);
+                JTextField width = new JTextField(5);
+
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("New height:"));
+                panel.add(height);
+                panel.add(new JLabel("New width:"));
+                panel.add(width);
+
+                try {
+                    int result = JOptionPane.showConfirmDialog(null, panel,
+                            "Enter rectangle's new Properties", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        if (Double.parseDouble(height.getText()) <= 0 || Double.parseDouble(width.getText()) <= 0) {
+                            JOptionPane.showMessageDialog(null, "Numbers can't be zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        if (Double.parseDouble(height.getText()) > 500 || Double.parseDouble(width.getText()) > 500) {
+                            JOptionPane.showMessageDialog(null, "Numbers are too big", "Message", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        Map<String, Double> m = new HashMap<>();
+                        m.put("height", Double.parseDouble(height.getText()));
+                        m.put("width", Double.parseDouble(width.getText()));
+                        selectedShape.setProperties(m);
+                        jPanel1.repaint();
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter proper Numbers", "Message", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a shape to resize.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -531,8 +647,50 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
     }//GEN-LAST:event_resizeButtonActionPerformed
 
     private void moveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_moveButtonActionPerformed
+        int selectedIndex = jCombo.getSelectedIndex();
+        if (selectedIndex != -1) {
+            Shape selectedShape = shapes.get(selectedIndex);
+            JTextField xField = new JTextField(5);
+            JTextField yField = new JTextField(5);
+
+            JPanel panel = new JPanel();
+            panel.add(new JLabel("New X:"));
+            panel.add(xField);
+            panel.add(new JLabel("New Y:"));
+            panel.add(yField);
+
+            try {
+                int result = JOptionPane.showConfirmDialog(null, panel,
+                        "Enter Properties", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+
+                    if (xField.getText().isEmpty() || yField.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Please enter values for X, Y.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (Double.parseDouble(xField.getText()) <= 0
+                            || Double.parseDouble(yField.getText()) <= 0) {
+                        JOptionPane.showMessageDialog(null, "Numbers can't be zero or less", "Message", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (Double.parseDouble(xField.getText()) > 400
+                            || Double.parseDouble(yField.getText()) > 500) {
+                        JOptionPane.showMessageDialog(null, "Numbers are too big", "Message", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    Point position = new Point();
+                    position.setLocation(Double.parseDouble(xField.getText()), Double.parseDouble(yField.getText()));
+                    selectedShape.setPosition(position);
+                    jPanel1.repaint();
+                }
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please enter proper Numbers", "Message", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a shape to move.", "Error", JOptionPane.ERROR_MESSAGE);
+        }    }//GEN-LAST:event_moveButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         if (shapes.size() == 0) {
@@ -552,6 +710,11 @@ public class Frontend extends javax.swing.JFrame implements DrawingEngine {
             }
             if (!filename.getSelectedFile().getName().endsWith(".txt")) {
                 JOptionPane.showMessageDialog(null, "Please enter fileName ends with .txt extension", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if(new File(filename.getSelectedFile().getName()).exists())
+            {
+                JOptionPane.showMessageDialog(null, "Please enter another name as this name is already choosen for another file!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
